@@ -1,0 +1,13 @@
+**/build/
+**/bin/
+**/obj/
+artifacts/
+*.nro
+*.elf
+*.nacp
+*.map
+*.o
+*.a
+*.so
+*.dll
+__pycache__/
