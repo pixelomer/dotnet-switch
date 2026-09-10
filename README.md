@@ -6,6 +6,7 @@ contracts; they are not a complete managed runtime or NativeAOT SDK.
 No game code, proprietary binaries or console credentials are included.
 
 - [Virtual-memory capability probe](tests/virtual-memory/README.md)
+- [Bounded data allocator](tests/allocator/README.md)
 - [Runtime design constraints](docs/DESIGN.md)
 
 The probe Makefile follows devkitPro's libnx application template.

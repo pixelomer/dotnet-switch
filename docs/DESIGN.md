@@ -23,9 +23,11 @@ outside them. Backing ownership must survive every outstanding alias.
 Decommit can recycle pages within a bounded backing pool even though the
 loader's heap remains physically allocated; that is not returning RAM to the OS.
 
-The capability probe is not a production reserve/commit/decommit/release
-allocator or a general POSIX mmap implementation. A compatibility layer would
-also need partial unmap and explicit ownership for fixed-address replacement.
+The experimental [nxvm interface](../include/nxvm.h) supplies data-only
+reserve/commit/decommit/complete-release with a bounded backing pool and
+independent metadata. The [allocator workload](../tests/allocator/README.md)
+exercises that implementation. It is not a general POSIX mmap layer: partial
+reservation release and fixed-address replacement remain unsupported.
 
 ## ABI and execution
 
