@@ -48,3 +48,25 @@ not recorded results.
 Read the ALLOCATOR_END success field and preceding failure records; process
 exit alone does not establish success. This is a native allocator workload,
 not a managed GC or general runtime compatibility test.
+
+## Host failure injection
+
+On a POSIX host with Bash, a C11 compiler, pthreads and AddressSanitizer/
+UndefinedBehaviorSanitizer support, run from the repository root:
+
+```sh
+bash tests/allocator/host/run.sh
+```
+
+CC can select the host compiler; the default is cc. The script compiles this
+checkout's source/nxvm.c with a local libnx test double into
+tests/allocator/host/build/failure-test, replacing any existing generated
+executable there, then runs it. Do not use the test-double header in a target
+build.
+
+The simulated mapping layer uses copies and inaccessible source pages to
+exercise 1,000 commit rollbacks after a second mapping fails. It checks old
+data preservation, exact accounting and exhaustion/reuse after rollback.
+A child process injects failed unmap and checks retained ownership and
+fail-closed operations; process teardown reclaims the deliberately poisoned
+instance. This simulation tests allocator ownership, not Horizon alias behavior.
