@@ -93,3 +93,17 @@ pause/context protocol. Shared-memory mapping retains its object logic and
 uses the PAL adapter. Unsupported cross-process file locks, writable shared-file
 mappings, subprocess dumps and activation fail explicitly.
 Native fault handling alone does not establish managed GC/EH correctness.
+
+## Resident native modules
+
+The PAL retains module management and delegates resident-NRO lookup to the
+Horizon adapter. It uses NRO segments/BSS, the homebrew loader's argv path and
+standard System V ELF dynamic symbol/hash metadata. Linkers must retain exports
+explicitly; hidden, TLS and undefined symbols are rejected.
+Releasing a module reference does not unload the resident NRO, and external
+native-module loading fails explicitly. Managed IL loading is separate.
+
+Resident metadata uses the section-bound code address and hidden PC-relative
+references. Do not substitute fabricated POSIX process or synchronization
+success for missing platform operations: PAL thread and synchronization state
+machines depend on real native lifetime and waiting semantics.
