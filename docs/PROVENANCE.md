@@ -44,3 +44,14 @@ ownership and process mapping permissions. Memory-state definitions are in
 libraries/libmesosphere/include/mesosphere/kern_k_memory_block.hpp.
 These are GPLv2 behavioral references, not implementation inputs.
 The runtime uses public libnx calls and original ownership/rollback code.
+
+## File-image mapping and positional I/O
+
+The public Atmosphere page-table/state definitions describe AliasCodeData
+transitions and homogeneous source mapping requirements. The PAL adapter
+calls public libnx process-memory APIs without copying kernel implementation.
+
+The [libnx positional-read extension](https://github.com/pixelomer/libnx/commit/99ad201ee1bf465ebbd9f18f826f19969f8deb4a)
+derives from official v4.12.0. Its fsdevPread uses the driver's existing read
+implementation with a local cursor. CoreCLR calls it through a newlib pread
+bridge instead of importing the driver's private descriptor layout.

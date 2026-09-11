@@ -62,3 +62,18 @@ while any owner remains. Cached writers publish through the PAL; generated code
 uses its executable address for PC-relative access to adjacent writable data.
 This process-mapping contract differs from one libnx CodeMemory object per
 allocation and does not replace managed GC or exception integration.
+
+## File-backed PE images
+
+CoreCLR keeps its PE layout/relocation logic and uses a PAL mapping adapter.
+Without a file pager, read-only views are pinned snapshots; shared writable-file
+mappings fail explicitly. Positional reads use fsdevPread inside the owning
+libnx driver, with an independent cursor and no copied private descriptor layout.
+Use the runtime source-build guide's staged libnx overlay through LIBNX_ROOT.
+
+Making AliasCode writable converts it to AliasCodeData, which cannot regain
+execute permission. The PAL fixes execute capability at creation and supplies
+temporary writer aliases for private images. The PE relocation decoder writes
+through a scoped view; its primary executable address is neither unmapped nor
+made writable. Independent backing/protection runs map separately and roll back
+on failure. Active writers pin their primary pages and publish caches on release.
