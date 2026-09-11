@@ -10,3 +10,5 @@ No game code, proprietary binaries or console credentials are included.
 - [Runtime design constraints](docs/DESIGN.md)
 
 The probe Makefile follows devkitPro's libnx application template.
+
+- [Recoverable fault primitive](tests/exception-return/README.md)
