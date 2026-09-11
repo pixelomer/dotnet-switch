@@ -32,3 +32,15 @@ References:
 - https://github.com/dotnet/runtime/tree/v10.0.12
 - https://github.com/switchbrew/libnx/tree/v4.12.0
 - https://github.com/Atmosphere-NX/Atmosphere/tree/1.11.2
+
+## Process mapping references
+
+At the same Atmosphere 1.11.2 revision, the public libmesosphere sources
+libraries/libmesosphere/source/init/kern_init_slab_setup.cpp,
+libraries/libmesosphere/source/kern_k_code_memory.cpp,
+libraries/libmesosphere/source/kern_k_page_table_base.cpp and
+libraries/libmesosphere/source/svc/kern_svc_process_memory.cpp describe object
+ownership and process mapping permissions. Memory-state definitions are in
+libraries/libmesosphere/include/mesosphere/kern_k_memory_block.hpp.
+These are GPLv2 behavioral references, not implementation inputs.
+The runtime uses public libnx calls and original ownership/rollback code.

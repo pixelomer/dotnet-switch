@@ -48,3 +48,17 @@ Primary references:
 - https://github.com/dotnet/runtime/tree/v10.0.12/src/coreclr/pal
 - https://github.com/dotnet/runtime/blob/v10.0.12/src/coreclr/utilcode/executableallocator.cpp
 - https://switchbrew.github.io/libnx/jit_8h.html
+
+## Executable mapping ownership
+
+The runtime's VMToOSInterface uses MapProcessCodeMemory,
+SetProcessMemoryPermission and MapProcessMemory with the loader's borrowed
+process handle. It retains CoreCLR's executable allocator and loader-heap
+logic, including dynamic interleaved stubs when template sharing is unavailable.
+
+Writable views may overlap and retire independently. Partial commitment and
+map/protect failure rollback must preserve the backing and primary mapping
+while any owner remains. Cached writers publish through the PAL; generated code
+uses its executable address for PC-relative access to adjacent writable data.
+This process-mapping contract differs from one libnx CodeMemory object per
+allocation and does not replace managed GC or exception integration.
