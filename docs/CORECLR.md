@@ -107,3 +107,16 @@ Resident metadata uses the section-bound code address and hidden PC-relative
 references. Do not substitute fabricated POSIX process or synchronization
 success for missing platform operations: PAL thread and synchronization state
 machines depend on real native lifetime and waiting semantics.
+
+## PAL startup and synchronization
+
+The PAL object manager, synchronization worker, thread startup handshake and
+resume semaphore retain their existing state machines. Worker commands use a
+bounded native mutex/condition-variable byte channel with backpressure,
+monotonic timeouts, FIFO ordering and drain-before-EOF closure.
+Shutdown parking uses a native condition variable rather than unsupported poll.
+
+svcGetProcessId supplies native process identity. Session IDs remain unavailable;
+foreign-process handles/monitoring and subprocess creation fail explicitly.
+minipal_getexepath uses the homebrew loader path shared with module lookup.
+No dummy descriptors or successful unsupported operations are supplied.
