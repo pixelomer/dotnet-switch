@@ -55,3 +55,14 @@ The [libnx positional-read extension](https://github.com/pixelomer/libnx/commit/
 derives from official v4.12.0. Its fsdevPread uses the driver's existing read
 implementation with a local cursor. CoreCLR calls it through a newlib pread
 bridge instead of importing the driver's private descriptor layout.
+
+## Thread interoperability
+
+The [libnx native-thread accessor](https://github.com/pixelomer/libnx/commit/cb5645686f762feb9e3a8c21cd683b1044df615c)
+returns a borrowed pthread-to-Horizon handle from inside the owning driver.
+CoreCLR does not copy the private pthread layout.
+The public devkitPro/buildscripts revision
+9b57a022648cbd971c2df3652671cc9deaa2482a and its newlib pthread patch are
+behavioral references for detach ownership; no patch implementation is imported.
+The runtime's shared reaper coordinates TLS completion and kernel-join
+lifetime handling.
