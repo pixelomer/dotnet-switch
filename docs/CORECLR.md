@@ -181,3 +181,23 @@ The [libnx fcntl correction](https://github.com/pixelomer/libnx/commit/93ca59ade
 returns -1 and sets errno to EOPNOTSUPP for unsupported operations; a positive
 error value must not be treated as a duplicate descriptor. Use the staged
 source-built libnx overlay rather than modifying a system SDK in place.
+
+## ARM64 native TLS ABI
+
+CoreCLR and NativeAOT ARM64 assembly use libnx's public compiler ABI
+__aarch64_read_tp with static TLS linker relocations. They do not copy private
+ThreadVars offsets or assign Linux's thread register.
+CoreCLR retains ordinary thread-static helpers rather than its Linux-ABI JIT
+TLS expansion; this capability selection does not disable the JIT globally.
+
+## Independent executable writer views
+
+CoreCLR's executable allocator identifies writer-cache blocks by address
+containment. Overlapping RX requests therefore need independent, disjoint
+virtual writer identities instead of overlapping returned addresses.
+
+Each writer view occupies its own part of the reserved arena, maps underlying
+code pages, retains its source chunks and publishes caches through its aliases.
+Release unmaps exactly that view's segments; partial native failures roll back
+only acquired segments. A stale-address permission check must precede reuse,
+because concurrent allocators may reclaim a retired hole.
