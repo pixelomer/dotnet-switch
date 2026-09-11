@@ -133,3 +133,39 @@ The diagnostic compile selection uses the existing TCP transport with its
 default listen port disabled on Horizon; this does not establish debugger
 transport support. GNU sincos declarations are scoped to the math target
 rather than changing newlib feature visibility globally.
+
+## Embedded host and resident data
+
+Static CoreCLR/RyuJIT linkage requires the GC map encoder, compression runtime,
+ICU and the matching native archives. Build the matching ARM64 CoreLib via
+clr.corelib with PublicSign=true. Use the runtime source-build guide above
+for the complete source prerequisites and commands.
+
+PAL_ProbeMemory walks native mappings and permissions without writing caller
+memory or using a Unix pipe. Named shared objects reject unsupported operations
+before creating files; unnamed PAL mutexes retain their normal behavior.
+The debugger FIFO transport rejects unsupported create/connect requests, and
+the embedded host uses EnableDiagnostics_Debugger=0.
+
+Declared resident NRO read-only data uses SetProcessMemoryPermission for its
+first write transition, then ordinary data permissions. That transition removes
+execute capability irreversibly. Text is excluded from writable transitions.
+
+## Shared virtual arena
+
+The nxvm allocator reserves a shared virtual arena before native workers can
+fragment the stack region. A libnx reservation keeps other native stacks out;
+sorted first-fit allocation reuses aligned holes with guard gaps. Physical
+commitment remains independently bounded by the backing pool.
+
+The arena targets twice the backing budget, with a 64 MiB minimum and an upper
+bound of half the Horizon stack region. Reservation retries halve the requested
+size; initialization fails if none can be reserved. GC queries actual arena
+capacity and maximum address instead of advertising the whole stack region.
+
+## Device-qualified file paths
+
+The PAL recognizes device-qualified roots and preserves their prefixes while
+using lexical dot/parent normalization. Directory creation uses the same root
+test. File workloads should use a separately closed input rather than reopen
+their active writable output log.
