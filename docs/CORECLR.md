@@ -120,3 +120,16 @@ svcGetProcessId supplies native process identity. Session IDs remain unavailable
 foreign-process handles/monitoring and subprocess creation fail explicitly.
 minipal_getexepath uses the homebrew loader path shared with module lookup.
 No dummy descriptors or successful unsupported operations are supplied.
+
+## Shared GC operating-system adapter
+
+CoreCLR and NativeAOT share the Horizon GC OS adapter while retaining the
+ordinary GC algorithms and event implementation. Advisory reset validates that
+the complete range is owned and committed. Affinity reconfiguration recomputes
+from the original kernel mask instead of progressively narrowing it; the
+maximum CPU index bound comes from that same native mask.
+
+The diagnostic compile selection uses the existing TCP transport with its
+default listen port disabled on Horizon; this does not establish debugger
+transport support. GNU sincos declarations are scoped to the math target
+rather than changing newlib feature visibility globally.
