@@ -201,3 +201,15 @@ code pages, retains its source chunks and publishes caches through its aliases.
 Release unmaps exactly that view's segments; partial native failures roll back
 only acquired segments. A stale-address permission check must precede reuse,
 because concurrent allocators may reclaim a retired hole.
+
+## Static native BCL exports
+
+The CoreCLR host resolves System.Native's static export table alongside the
+globalization table. The unsupported signal backend reports no valid native
+signal number. Network-change support selects the existing BSD route code and
+propagates native errors; Linux netlink's sys/uio.h dependency is scoped to that
+branch. Compile selection alone does not establish network-change behavior.
+
+The host's --jit-trace option uses the upstream buffered JitStdOutFile sink.
+Keep managed probe builds deterministic and keep compiler, CoreLib and native
+export tables aligned with the source-build profile.
