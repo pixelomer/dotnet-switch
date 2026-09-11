@@ -12,3 +12,5 @@ No game code, proprietary binaries or console credentials are included.
 The probe Makefile follows devkitPro's libnx application template.
 
 - [Recoverable fault primitive](tests/exception-return/README.md)
+
+- [CoreCLR integration boundaries](docs/CORECLR.md)
