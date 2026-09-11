@@ -169,3 +169,15 @@ The PAL recognizes device-qualified roots and preserves their prefixes while
 using lexical dot/parent normalization. Directory creation uses the same root
 test. File workloads should use a separately closed input rather than reopen
 their active writable output log.
+
+## Native file descriptor ownership
+
+The PAL uses libsysbase's reference-counted dup for file-mapping and
+standard-stream ownership, preserving the shared cursor. It normalizes missing
+exhaustion errno and does not request nonexistent close-on-exec state.
+Explicit inherited handles remain unsupported.
+
+The [libnx fcntl correction](https://github.com/pixelomer/libnx/commit/93ca59adeaf4d0d86a456b5266dd8eb5b024fe55)
+returns -1 and sets errno to EOPNOTSUPP for unsupported operations; a positive
+error value must not be treated as a duplicate descriptor. Use the staged
+source-built libnx overlay rather than modifying a system SDK in place.
