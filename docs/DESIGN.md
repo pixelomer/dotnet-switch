@@ -40,3 +40,19 @@ GC safepoints, suspension and thread teardown need their own ownership and
 ordering contracts. A void API cannot report an unsupported operation through
 an invented failure return. Native process exit is not managed exception
 propagation, successful shutdown or evidence that a managed workload completed.
+
+## Cross-thread GC ordering
+
+NativeAOT sets the global GC trap before an all-thread memory barrier and
+thread-transition inspection. A local DMB does not supply that all-thread
+contract. TLB invalidation from a permission change is not by itself proof
+that remote-thread stores have been ordered. The upstream discussion is in
+[8344](https://github.com/dotnet/runtime/issues/8344) and
+[111776](https://github.com/dotnet/runtime/issues/111776).
+
+A platform implementation needs a rendezvous of registered managed threads
+or symmetric barriers in every relevant generated/runtime GC-mode transition.
+Compiler-generated P/Invoke transitions must participate; changing a C wrapper
+alone cannot cover them. This requirement is separate from reaching safe points
+and from restoring an exception context. The native probes in this repository
+do not implement that managed-runtime protocol.
