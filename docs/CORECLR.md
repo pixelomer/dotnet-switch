@@ -213,3 +213,11 @@ branch. Compile selection alone does not establish network-change behavior.
 The host's --jit-trace option uses the upstream buffered JitStdOutFile sink.
 Keep managed probe builds deterministic and keep compiler, CoreLib and native
 export tables aligned with the source-build profile.
+
+## Application native exports and managed inputs
+
+Use the CoreCLR hosting callback to bind an application's linked native exports.
+Managed assemblies must match the Horizon runtime and its source-built framework.
+Linux ReadyToRun native code assumes an incompatible native TLS ABI; disabling
+ReadyToRun is not a substitute for supplying matched IL-only managed inputs.
+Keep application native renderer/audio dependencies separate from managed IL.
