@@ -77,3 +77,19 @@ temporary writer aliases for private images. The PE relocation decoder writes
 through a scoped view; its primary executable address is neither unmapped nor
 made writable. Independent backing/protection runs map separately and roll back
 on failure. Active writers pin their primary pages and publish caches on release.
+
+## PAL exception integration
+
+Horizon user exceptions enter CoreCLR's SEHProcessException, heap record
+promotion and PAL virtual-unwind transitions. Ordinary dispatch runs below
+the original SP, supports nested faults and lets the runtime handler leave
+through managed dispatch. The ARM64 RestoreCompleteContext deliberate-fault
+mechanism uses kernel-assisted return to preserve X16/X17; no Unix signal ABI
+is fabricated.
+
+SEH-enabled PAL threads use the common Horizon thread registry shared with
+NativeAOT. Process write-buffer flushing uses its synchronized kernel
+pause/context protocol. Shared-memory mapping retains its object logic and
+uses the PAL adapter. Unsupported cross-process file locks, writable shared-file
+mappings, subprocess dumps and activation fail explicitly.
+Native fault handling alone does not establish managed GC/EH correctness.
