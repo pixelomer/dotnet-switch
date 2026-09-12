@@ -1,0 +1,25 @@
+{
+  "profiles": {
+    "net10-coreclr": {
+      "revision": "3884986e15c71d2780defa07dec571b0bb71bead",
+      "flavor": "coreclr",
+      "url": "https://github.com/pixelomer/dotnet-runtime.git"
+    },
+    "net10-nativeaot": {
+      "revision": "3884986e15c71d2780defa07dec571b0bb71bead",
+      "flavor": "nativeaot",
+      "url": "https://github.com/pixelomer/dotnet-runtime.git"
+    },
+    "net9-nativeaot": {
+      "revision": "d8a8b12e7afad8847cc9f6c2363e11188172839c",
+      "flavor": "nativeaot",
+      "url": "https://github.com/pixelomer/dotnet-runtime.git"
+    },
+    "net9-mono-llvm": {
+      "revision": "a97e79341a6b858f95c708a381450a642bf433b1",
+      "flavor": "mono",
+      "llvm": true,
+      "url": "https://github.com/pixelomer/dotnet-runtime.git"
+    }
+  }
+}
