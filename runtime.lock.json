@@ -1,7 +1,7 @@
 {
   "profiles": {
     "net10-coreclr": {
-      "revision": "b115efe03395844de50f643c96ea99f30a2ee11c",
+      "revision": "4a1e59e06fba330166a070eab784cc37a3232f6a",
       "flavor": "coreclr",
       "url": "https://github.com/pixelomer/dotnet-runtime.git"
     },
